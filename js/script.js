@@ -17,15 +17,17 @@ function initMap() {
     var service = new google.maps.places.PlacesService(map);
     service.nearbySearch({
         location: paris,
-        radius: 50,
-        types: ['bar']
+        radius: 500,
+        types: ['bar', 'movie_theater']
     }, callback);
 }
 function callback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
-        for (var i = 0; i < results.length; i++) {
-            createMarker(results[i]);
-        }
+        results.sort(function(a, b) {
+            return parseFloat(b.rating) - parseFloat(a.rating);
+        });
+        console.log(results[0]);
+        createMarker(results[0]);
     }
 }
 
