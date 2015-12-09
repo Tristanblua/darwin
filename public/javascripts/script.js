@@ -6,6 +6,46 @@ var infowindow;
 
 //Defined restriction: 10km de rayon
 
+
+if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(getPosition);
+}
+function getPosition(position) {
+    sendCoordinates(position.coords.latitude, position.coords.longitude);
+}
+
+function sendCoordinates(lat, lng) {
+    var httpRequest = false;
+
+    if (window.XMLHttpRequest) {
+        httpRequest = new XMLHttpRequest();
+        if (httpRequest.overrideMimeType) {
+            httpRequest.overrideMimeType('text/xml');
+        }
+    } else if (window.ActiveXObject) { // IE
+        try {
+            httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+            try {
+                httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {
+            }
+        }
+    }
+
+    if (!httpRequest) {
+        console.error('Impossible de créer une instance XMLHTTP');
+        return false;
+    }
+
+    httpRequest.onreadystatechange = function () {
+        (httpRequest);
+    };
+    httpRequest.open('GET', '/room/addCoordinate?lat=' + lat + '&lng=' + lng, true);
+    httpRequest.send();
+}
+
+
 function initMap() {
     var paris = {lat: 48.856614, lng: 2.352222};
 
