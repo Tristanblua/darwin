@@ -6,16 +6,6 @@ var infowindow;
 
 //Defined restriction: 10km de rayon
 
-
-// calcul moyenne
-/**
- *
- */
-function calcul() {
-
-}
-
-
 function initMap() {
     var paris = {lat: 48.856614, lng: 2.352222};
 
@@ -55,4 +45,23 @@ function createMarker(place) {
         infowindow.setContent(place.name);
         infowindow.open(map, this);
     });
+}
+
+
+function calculCenterCoordinates(coordinates) {
+    var center = {
+        lat: 0,
+        lng: 0
+    };
+    var nbrTotalCoordinates = coordinates.length();
+
+    for (var i = 0; i < nbrTotalCoordinates; i++) {
+        center.lat += coordinates[i].lat;
+        center.lng += coordinates[i].lng;
+    }
+
+    center.lat = center.lat / nbrTotalCoordinates;
+    center.lng = center.lng / nbrTotalCoordinates;
+
+    return center;
 }
