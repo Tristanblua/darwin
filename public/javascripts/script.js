@@ -6,7 +6,7 @@ var infowindow;
 
 //Defined restriction: 10km de rayon
 
-
+console.log(coordinates);
 if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(getPosition);
 }
