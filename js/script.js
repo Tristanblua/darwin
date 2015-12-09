@@ -4,6 +4,18 @@
 var map;
 var infowindow;
 
+//Defined restriction: 10km de rayon
+
+
+// calcul moyenne
+/**
+ *
+ */
+function calcul() {
+
+}
+
+
 function initMap() {
     var paris = {lat: 48.856614, lng: 2.352222};
 
@@ -21,6 +33,7 @@ function initMap() {
         types: ['bar', 'movie_theater']
     }, callback);
 }
+
 function callback(results, status) {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
         results.sort(function(a, b) {
