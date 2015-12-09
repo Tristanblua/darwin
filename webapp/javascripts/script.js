@@ -4,48 +4,35 @@
 var map;
 var infowindow;
 var arrCoordinate = [{lat: 48.856614, lng: 2.352222},{lat: 47.956614, lng: 2.152222},{lat: 48.896614, lng: 2.752222}];
+var Location = ObjectStorage('Location');
+var QueryString = getQueryString();
+
+if (typeof localStorage.tokens !== "undefined") {
+    var tokens = JSON.parse(localStorage.tokens);
+    if (tokens.indexOf(QueryString.token)) {
+        console.log(tokens);
+    } else {
+       //addToken in array
+        tokens.push(QueryString.token);
+    }
+} else {
+    /// create Tokens array
+    var tokens = [];
+    tokens.push(QueryString.token);
+}
+localStorage.tokens = JSON.stringify(tokens);
+
 
 //Defined restriction: 10km de rayon
-
-if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(getPosition);
+function firstVisite() {
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(getPosition);
+    }
 }
+
 function getPosition(position) {
-    console.log(position);
-    sendCoordinates(position.coords.latitude, position.coords.longitude);
+    Location.save({token: QueryString.token, lat: position.coords.latitude, lng: position.coords.longitude});
 }
-
-function sendCoordinates(lat, lng) {
-    var httpRequest = false;
-
-    if (window.XMLHttpRequest) {
-        httpRequest = new XMLHttpRequest();
-        if (httpRequest.overrideMimeType) {
-            httpRequest.overrideMimeType('text/xml');
-        }
-    } else if (window.ActiveXObject) { // IE
-        try {
-            httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
-            try {
-                httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch (e) {
-            }
-        }
-    }
-
-    if (!httpRequest) {
-        console.error('Impossible de créer une instance XMLHTTP');
-        return false;
-    }
-
-    httpRequest.onreadystatechange = function () {
-        (httpRequest);
-    };
-    httpRequest.open('GET', '/room/addCoordinate?lat=' + lat + '&lng=' + lng, true);
-    httpRequest.send();
-}
-
 
 function initMap() {
     var center = calculCenterCoordinates(arrCoordinate);
@@ -109,8 +96,66 @@ function calculCenterCoordinates(coordinates) {
 
 var rand = function() {
     var Token = Math.random().toString(36).substr(2);
-    console.log(Token);
+    return Token;
 };
 
 
+function ObjectStorage(nameObject) {
+    Parse.initialize("ed25cVixRTbSDfLMimYGv9HysDR1wC8R4Jkg6erm", "j8pJL3I0LoWOnuKKzyHSLDfcrhTLRe4vfAOEulPy");
+    var Object = Parse.Object.extend(nameObject);
 
+    return {
+        save: save,
+        retrieve: retrieve
+    };
+
+    function save(params) {
+        var newObject = new Object();
+        newObject.save(params).then(function(object) {
+            alert('saved');
+        }, function (error) {
+            alert("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function retrieve(key, val) {
+        var query = new Parse.Query(Object);
+        query.equalTo(key, val);
+        query.find({
+            success: function(results) {
+                alert("Successfully retrieved " + results.length + " scores.");
+                // Do something with the returned Parse.Object values
+                for (var i = 0; i < results.length; i++) {
+                    var object = results[i];
+                    alert(object.id + ' - ' + object.get('lat') + ', ' + object.get('lng'));
+                }
+            },
+            error: function(error) {
+                alert("Error: " + error.code + " " + error.message);
+            }
+        });
+    }
+}
+
+function getQueryString() {
+    // This function is anonymous, is executed immediately and
+    // the return value is assigned to QueryString!
+    var query_string = {};
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");
+        // If first entry with this name
+        if (typeof query_string[pair[0]] === "undefined") {
+            query_string[pair[0]] = decodeURIComponent(pair[1]);
+            // If second entry with this name
+        } else if (typeof query_string[pair[0]] === "string") {
+            var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+            query_string[pair[0]] = arr;
+            // If third or later entry with this name
+        } else {
+            query_string[pair[0]].push(decodeURIComponent(pair[1]));
+        }
+    }
+    return query_string;
+};
