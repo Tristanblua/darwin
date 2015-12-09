@@ -3,14 +3,15 @@
  */
 var map;
 var infowindow;
+var arrCoordinate = [{lat: 48.856614, lng: 2.352222},{lat: 47.956614, lng: 2.152222},{lat: 48.896614, lng: 2.752222}];
 
 //Defined restriction: 10km de rayon
 
 function initMap() {
-    var paris = {lat: 48.856614, lng: 2.352222};
-
+    var center = calculCenterCoordinates(arrCoordinate);
+    console.log(center);
     map = new google.maps.Map(document.getElementById('map'), {
-        center: paris,
+        center: center,
         zoom: 15
     });
 
@@ -18,8 +19,8 @@ function initMap() {
 
     var service = new google.maps.places.PlacesService(map);
     service.nearbySearch({
-        location: paris,
-        radius: 500,
+        location: center,
+        radius: 10000,
         types: ['bar', 'movie_theater']
     }, callback);
 }
@@ -29,7 +30,6 @@ function callback(results, status) {
         results.sort(function(a, b) {
             return parseFloat(b.rating) - parseFloat(a.rating);
         });
-        console.log(results[0]);
         createMarker(results[0]);
     }
 }
@@ -40,6 +40,7 @@ function createMarker(place) {
         map: map,
         position: place.geometry.location
     });
+    map.setCenter(place.geometry.location);
 
     google.maps.event.addListener(marker, 'click', function() {
         infowindow.setContent(place.name);
@@ -53,7 +54,7 @@ function calculCenterCoordinates(coordinates) {
         lat: 0,
         lng: 0
     };
-    var nbrTotalCoordinates = coordinates.length();
+    var nbrTotalCoordinates = coordinates.length;
 
     for (var i = 0; i < nbrTotalCoordinates; i++) {
         center.lat += coordinates[i].lat;
@@ -65,3 +66,10 @@ function calculCenterCoordinates(coordinates) {
 
     return center;
 }
+
+var rand = function() {
+    var Token = Math.random().toString(36).substr(2);
+    console.log(Token);
+};
+
+
