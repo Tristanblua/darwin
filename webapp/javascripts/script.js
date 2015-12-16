@@ -32,15 +32,22 @@ localStorage.tokens = JSON.stringify(tokens);*/
 
 
 function start() {
-    firstVisite();
-    Location.retrieve('token', QueryString.token ) ;
-}
+
+    if (localStorage.getItem("identifier", "hasVisited") || createdDate > date) {
+
+    } else {
+        firstVisite();
+    }
+    Location.retrieve('token', QueryString.token);
+
+
 
 
 //Defined restriction: 10km de rayon
 function firstVisite() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(getPosition);
+        localStorage.setItem("identifier", "hasVisited");
     }
 }
 
@@ -145,11 +152,14 @@ function ObjectStorage(nameObject) {
                 for (var i = 0; i < results.length; i++) {
                     var object = results[i];
                     //console.log(object.id + ' - ' + object.get('lat') + ', ' + object.get('lng'));
-                    var Loc = {lat : object.get('lat'), lng : object.get('lng')};
+                    var Loc = {lat : object.get('lat'), lng : object.get('lng'), date : object.get('createdAt')};
                     //console.log(Loc);
                     arrCoordinate.push(Loc);
                 }
                 console.log(arrCoordinate);
+
+                var createdDate = arrCoordinate[0].date.getTime()+1200000;
+                var date = new Date().getTime();
 
                 initMap();
 
