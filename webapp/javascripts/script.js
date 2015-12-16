@@ -26,13 +26,14 @@ var QueryString = getQueryString();
 }
 localStorage.tokens = JSON.stringify(tokens);*/
 
-//firstVisite();
+
 
 
 
 
 function start() {
-    Location.retrieve('token','zezeg');
+    firstVisite();
+    Location.retrieve('token', QueryString.token ) ;
 }
 
 
@@ -60,7 +61,7 @@ function initMap() {
     var service = new google.maps.places.PlacesService(map);
     service.nearbySearch({
         location: center,
-        radius: 10000,
+        radius: 1000,
         types: ['bar', 'movie_theater']
     }, callback);
 }
@@ -125,10 +126,12 @@ function ObjectStorage(nameObject) {
     function save(params) {
         var newObject = new Object();
         newObject.save(params).then(function(object) {
-            alert('saved');
+            alert('Ta position a été prise en compte. Le point de RDV sera définitif dans 20 min  ! ');
+
         }, function (error) {
             alert("Error: " + error.code + " " + error.message);
         });
+
     }
 
 
@@ -185,4 +188,5 @@ function getQueryString() {
         }
     }
     return query_string;
+
 };
