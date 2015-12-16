@@ -3,7 +3,7 @@
  */
 var map;
 var infowindow;
-var arrCoordinate = [/*{lat: 48.856614, lng: 2.352222},{lat: 47.956614, lng: 2.152222},{lat: 48.896614, lng: 2.752222}*/];
+var arrCoordinate = [];
 var Location = ObjectStorage('Location');
 var QueryString = getQueryString();
 
@@ -23,7 +23,7 @@ var QueryString = getQueryString();
 localStorage.tokens = JSON.stringify(tokens);*/
 
 //firstVisite();
-setTimeout(Location.retrieve('token','zezeg'),5000);
+Location.retrieve('token','zezeg');
 
 
 
@@ -124,7 +124,6 @@ function ObjectStorage(nameObject) {
     }
 
     function retrieve(key, val) {
-        console.log('retrieve');
         var query = new Parse.Query(Object);
         query.equalTo(key, val);
         query.find({
@@ -138,18 +137,21 @@ function ObjectStorage(nameObject) {
                     //console.log(Loc);
                     arrCoordinate.push(Loc);
                 }
-                return arrCoordinate;
-               //
+                console.log(arrCoordinate);
+
 
             },
             error: function(error) {
                 console.log("Error: " + error.code + " " + error.message);
             }
+
         });
+
     }
 }
 
-console.log(arrCoordinate);
+
+
 function getQueryString() {
     // This function is anonymous, is executed immediately and
     // the return value is assigned to QueryString!
