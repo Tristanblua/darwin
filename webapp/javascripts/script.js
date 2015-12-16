@@ -30,7 +30,7 @@ localStorage.tokens = JSON.stringify(tokens);*/
 
 function start() {
 
-    if (localStorage.getItem("identifier", "hasVisited") || createdDate > date) {
+    if (localStorage.getItem("identifier", QueryString.token) == QueryString.token /*|| createdDate > date*/) {
 
     } else {
         firstVisite();
@@ -44,7 +44,7 @@ function start() {
 function firstVisite() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(getPosition);
-        localStorage.setItem("identifier", "hasVisited");
+        localStorage.setItem("identifier", QueryString.token);
     }
 }
 
