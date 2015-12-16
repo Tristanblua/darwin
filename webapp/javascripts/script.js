@@ -10,15 +10,19 @@ var QueryString = getQueryString();
 if (typeof localStorage.tokens !== "undefined") {
     var tokens = JSON.parse(localStorage.tokens);
     if (tokens.indexOf(QueryString.token)) {
-        console.log(tokens);
+        console.log(tokens); // deja validé
     } else {
        //addToken in array
         tokens.push(QueryString.token);
+        //validation
+        firstVisite();
     }
 } else {
     /// create Tokens array
     var tokens = [];
     tokens.push(QueryString.token);
+    //validation
+    firstVisite();
 }
 localStorage.tokens = JSON.stringify(tokens);
 
@@ -123,15 +127,15 @@ function ObjectStorage(nameObject) {
         query.equalTo(key, val);
         query.find({
             success: function(results) {
-                alert("Successfully retrieved " + results.length + " scores.");
+                console.log("Successfully retrieved " + results.length + " scores.");
                 // Do something with the returned Parse.Object values
                 for (var i = 0; i < results.length; i++) {
                     var object = results[i];
-                    alert(object.id + ' - ' + object.get('lat') + ', ' + object.get('lng'));
+                    console.log(object.id + ' - ' + object.get('lat') + ', ' + object.get('lng'));
                 }
             },
             error: function(error) {
-                alert("Error: " + error.code + " " + error.message);
+                console.log("Error: " + error.code + " " + error.message);
             }
         });
     }
