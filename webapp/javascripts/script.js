@@ -28,6 +28,9 @@ localStorage.tokens = JSON.stringify(tokens);*/
 
 
 
+
+
+
 function start() {
 
     if (localStorage.getItem("identifier", QueryString.token) == QueryString.token /*|| createdDate > date*/) {
@@ -37,7 +40,7 @@ function start() {
     }
     Location.retrieve('token', QueryString.token);
 
-}
+
 
 
 //Defined restriction: 10km de rayon
@@ -130,15 +133,16 @@ function ObjectStorage(nameObject) {
     function save(params) {
         var newObject = new Object();
         newObject.save(params).then(function(object) {
-            alert('saved');
+            alert('Ta position a été prise en compte. Le point de RDV sera définitif dans 20 min  ! ');
+
         }, function (error) {
             alert("Error: " + error.code + " " + error.message);
         });
+
     }
 
 
     function retrieve(key, val) {
-        console.log('retrieve');
         var query = new Parse.Query(Object);
         query.equalTo(key, val);
         query.find({
@@ -153,17 +157,25 @@ function ObjectStorage(nameObject) {
                     arrCoordinate.push(Loc);
                 }
                 console.log(arrCoordinate);
+
                 var createdDate = arrCoordinate[0].date.getTime()+1200000;
                 var date = new Date().getTime();
+
                 initMap();
+
             },
             error: function(error) {
                 console.log("Error: " + error.code + " " + error.message);
             }
 
         });
+
     }
 }
+
+
+
+
 
 function getQueryString() {
     // This function is anonymous, is executed immediately and
@@ -186,4 +198,5 @@ function getQueryString() {
         }
     }
     return query_string;
+
 };
