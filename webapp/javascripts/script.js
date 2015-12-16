@@ -10,22 +10,30 @@ var QueryString = getQueryString();
 /*if (typeof localStorage.tokens !== "undefined") {
     var tokens = JSON.parse(localStorage.tokens);
     if (tokens.indexOf(QueryString.token)) {
-        console.log(tokens);
+        console.log(tokens); // deja validé
     } else {
        //addToken in array
         tokens.push(QueryString.token);
+        //validation
+        firstVisite();
     }
 } else {
     /// create Tokens array
     var tokens = [];
     tokens.push(QueryString.token);
+    //validation
+    firstVisite();
 }
 localStorage.tokens = JSON.stringify(tokens);*/
 
 //firstVisite();
-Location.retrieve('token','zezeg');
 
 
+
+
+function start() {
+    Location.retrieve('token','zezeg');
+}
 
 
 //Defined restriction: 10km de rayon
@@ -123,6 +131,7 @@ function ObjectStorage(nameObject) {
         });
     }
 
+
     function retrieve(key, val) {
         var query = new Parse.Query(Object);
         query.equalTo(key, val);
@@ -139,6 +148,7 @@ function ObjectStorage(nameObject) {
                 }
                 console.log(arrCoordinate);
 
+                initMap();
 
             },
             error: function(error) {
@@ -149,6 +159,8 @@ function ObjectStorage(nameObject) {
 
     }
 }
+
+
 
 
 
