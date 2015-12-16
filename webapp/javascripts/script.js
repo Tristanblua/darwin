@@ -3,11 +3,11 @@
  */
 var map;
 var infowindow;
-var arrCoordinate = [{lat: 48.856614, lng: 2.352222},{lat: 47.956614, lng: 2.152222},{lat: 48.896614, lng: 2.752222}];
+var arrCoordinate = [/*{lat: 48.856614, lng: 2.352222},{lat: 47.956614, lng: 2.152222},{lat: 48.896614, lng: 2.752222}*/];
 var Location = ObjectStorage('Location');
 var QueryString = getQueryString();
 
-if (typeof localStorage.tokens !== "undefined") {
+/*if (typeof localStorage.tokens !== "undefined") {
     var tokens = JSON.parse(localStorage.tokens);
     if (tokens.indexOf(QueryString.token)) {
         console.log(tokens);
@@ -20,7 +20,12 @@ if (typeof localStorage.tokens !== "undefined") {
     var tokens = [];
     tokens.push(QueryString.token);
 }
-localStorage.tokens = JSON.stringify(tokens);
+localStorage.tokens = JSON.stringify(tokens);*/
+
+//firstVisite();
+setTimeout(Location.retrieve('token','zezeg'),5000);
+
+
 
 
 //Defined restriction: 10km de rayon
@@ -119,24 +124,32 @@ function ObjectStorage(nameObject) {
     }
 
     function retrieve(key, val) {
+        console.log('retrieve');
         var query = new Parse.Query(Object);
         query.equalTo(key, val);
         query.find({
             success: function(results) {
-                alert("Successfully retrieved " + results.length + " scores.");
+                console.log("Successfully retrieved " + results.length + " scores.");
                 // Do something with the returned Parse.Object values
                 for (var i = 0; i < results.length; i++) {
                     var object = results[i];
-                    alert(object.id + ' - ' + object.get('lat') + ', ' + object.get('lng'));
+                    //console.log(object.id + ' - ' + object.get('lat') + ', ' + object.get('lng'));
+                    var Loc = {lat : object.get('lat'), lng : object.get('lng')};
+                    //console.log(Loc);
+                    arrCoordinate.push(Loc);
                 }
+                return arrCoordinate;
+               //
+
             },
             error: function(error) {
-                alert("Error: " + error.code + " " + error.message);
+                console.log("Error: " + error.code + " " + error.message);
             }
         });
     }
 }
 
+console.log(arrCoordinate);
 function getQueryString() {
     // This function is anonymous, is executed immediately and
     // the return value is assigned to QueryString!
